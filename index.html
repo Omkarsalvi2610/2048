@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2084 - Home</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: peachpuff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            text-align: center;
+            z-index: 1;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 72px;
+            color: #776e65;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .play-button {
+            padding: 20px 60px;
+            font-size: 24px;
+            background-color: #bbada0;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            z-index: 2;
+        }
+
+        .play-button:hover {
+            transform: scale(1.05);
+            background-color: #a09488;
+        }
+
+        .number-particle {
+            position: absolute;
+            font-weight: bold;
+            color: white;
+            user-select: none;
+            pointer-events: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 5px;
+            opacity: 0.4;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transition: transform 0.1s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>2084</h1>
+        <button class="play-button" onclick="location.href='game.html'">Play Game</button>
+    </div>
+
+    <script>
+        class NumberParticle {
+            constructor() {
+                this.element = document.createElement('div');
+                this.element.className = 'number-particle';
+                this.reset(true);
+                document.body.appendChild(this.element);
+            }
+
+            reset(randomizeY = false) {
+                const size = Math.random() * 40 + 40;
+                const value = Math.pow(2, Math.floor(Math.random() * 12) + 1);
+                const colors = {
+                    2: '#ff9999',
+                    4: '#ff6666',
+                    8: '#ff3333',
+                    16: '#ff0000',
+                    32: '#cc0000',
+                    64: '#990000',
+                    128: '#660000',
+                    256: '#330000',
+                    512: '#000033',
+                    1024: '#000066',
+                    2048: '#000099',
+                    4096: '#0000cc'
+                };
+
+                this.element.style.width = `${size}px`;
+                this.element.style.height = `${size}px`;
+                this.element.style.fontSize = `${size/3}px`;
+                this.element.style.backgroundColor = colors[value];
+                this.element.textContent = value;
+
+                this.x = Math.random() * window.innerWidth;
+                this.y = randomizeY ? Math.random() * window.innerHeight : -size;
+                this.speed = Math.random() * 1 + 0.5;
+                this.rotation = Math.random() * 360;
+                this.rotationSpeed = (Math.random() - 0.5) * 2;
+                
+                this.horizontalSpeed = (Math.random() - 0.5) * 0.5;
+            }
+
+            update() {
+                this.y += this.speed;
+                this.x += this.horizontalSpeed;
+                this.rotation += this.rotationSpeed;
+                
+                if (this.y > window.innerHeight || 
+                    this.x < -50 || 
+                    this.x > window.innerWidth + 50) {
+                    this.reset();
+                }
+
+                this.element.style.transform = `translate(${this.x}px, ${this.y}px) rotate(${this.rotation}deg)`;
+            }
+        }
+
+        const particles = Array.from({ length: 30 }, () => new NumberParticle());
+
+        function animate() {
+            particles.forEach(particle => particle.update());
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        window.addEventListener('resize', () => {
+            particles.forEach(particle => particle.reset(true));
+        });
+    </script>
+</body>
+</html> 

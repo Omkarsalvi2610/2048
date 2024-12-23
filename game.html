@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2084 Game</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .touch-controls {
+            display: none; /* Hidden by default, shown on mobile */
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .touch-controls {
+                display: grid;
+                grid-template-areas:
+                    ". up ."
+                    "left down right";
+                grid-template-columns: repeat(3, 60px);
+                justify-content: center;
+            }
+        }
+
+        .touch-btn {
+            width: 60px;
+            height: 60px;
+            background-color: #bbada0;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .touch-btn:active {
+            background-color: #a09488;
+        }
+
+        #upBtn { grid-area: up; }
+        #leftBtn { grid-area: left; }
+        #downBtn { grid-area: down; }
+        #rightBtn { grid-area: right; }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="controls">
+            <button id="muteButton">🔊</button>
+            <button id="resetButton">Reset Game</button>
+        </div>
+        <div class="grid"></div>
+        <div class="score-container">
+            <div class="score">Score: <span id="score">0</span></div>
+            <div class="high-score">High Score: <span id="highScore">0</span></div>
+        </div>
+        <!-- Add touch controls -->
+        <div class="touch-controls">
+            <button class="touch-btn" id="upBtn">⬆️</button>
+            <button class="touch-btn" id="leftBtn">⬅️</button>
+            <button class="touch-btn" id="downBtn">⬇️</button>
+            <button class="touch-btn" id="rightBtn">➡️</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html> 

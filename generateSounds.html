@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generate Game Sounds</title>
+</head>
+<body>
+    <h1>Game Sound Generator</h1>
+    <button onclick="generateAndDownload('move')">Generate Move Sound</button>
+    <button onclick="generateAndDownload('merge')">Generate Merge Sound</button>
+    <button onclick="generateAndDownload('gameover')">Generate Game Over Sound</button>
+
+    <script>
+        function generateAndDownload(type) {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            switch(type) {
+                case 'move':
+                    oscillator.frequency.setValueAtTime(400, audioContext.currentTime);
+                    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                    gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.1);
+                    oscillator.start();
+                    oscillator.stop(audioContext.currentTime + 0.1);
+                    break;
+                case 'merge':
+                    oscillator.frequency.setValueAtTime(600, audioContext.currentTime);
+                    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                    gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.15);
+                    oscillator.start();
+                    oscillator.stop(audioContext.currentTime + 0.15);
+                    break;
+                case 'gameover':
+                    oscillator.frequency.setValueAtTime(200, audioContext.currentTime);
+                    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                    gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.5);
+                    oscillator.start();
+                    oscillator.stop(audioContext.currentTime + 0.5);
+                    break;
+            }
+
+            // Record the audio
+            const mediaRecorder = new MediaRecorder(audioContext.createMediaStreamDestination().stream);
+            const chunks = [];
+
+            mediaRecorder.ondataavailable = (e) => chunks.push(e.data);
+            mediaRecorder.onstop = () => {
+                const blob = new Blob(chunks, { type: 'audio/mp3' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${type}.mp3`;
+                a.click();
+            };
+
+            mediaRecorder.start();
+            setTimeout(() => mediaRecorder.stop(), 1000);
+        }
+    </script>
+</body>
+</html> 
